@@ -239,6 +239,8 @@
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
         
         .modal-header {
@@ -247,11 +249,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(25, 25, 25, 0.95);
-            backdrop-filter: blur(10px);
+            background: transparent;
             border-radius: 16px 16px 0 0;
-            border: 1px solid rgba(79, 70, 229, 0.3);
-            border-bottom: none;
         }
         
         .modal-header h2 {
@@ -285,10 +284,7 @@
             padding: 20px 24px;
             overflow-y: auto;
             flex: 1;
-            background: rgba(25, 25, 25, 0.95);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(79, 70, 229, 0.3);
-            border-right: 1px solid rgba(79, 70, 229, 0.3);
+            background: transparent;
         }
         
         .modal-body::-webkit-scrollbar {
@@ -386,11 +382,8 @@
         .modal-footer {
             padding: 16px 24px;
             border-top: 1px solid rgba(79, 70, 229, 0.2);
-            background: rgba(25, 25, 25, 0.95);
-            backdrop-filter: blur(10px);
+            background: transparent;
             border-radius: 0 0 16px 16px;
-            border: 1px solid rgba(79, 70, 229, 0.3);
-            border-top: none;
         }
         
         .modal-copy-btn {
