@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucent Script Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bgcolor: rgb(25, 25, 25);
+            --surface: #1f1f1f;
+            --surface2: #242424;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(79, 70, 229, 0.3);
+            --accent: #4F46E5;
+            --accent-glow: rgba(79, 70, 229, 0.15);
+            --text-main: #E8E8EA;
+            --text-secondary: #CFCFCF;
+            --text-muted: #888;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--bgcolor);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+        
+        /* SEARCH BAR */
+        .search-wrapper {
+            position: fixed;
+            left: 50%;
+            top: 20px;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        
+        .searchbar {
+            width: 520px;
+            max-width: 80vw;
+            height: 46px;
+            padding: 0 20px 0 44px;
+            background: var(--bgcolor);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .searchbar::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .searchbar:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--accent-glow), 0 4px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 14px;
+            transition: color 0.25s;
+        }
+        
+        .searchbar:focus ~ .search-icon {
+            color: var(--accent);
+        }
+        
+        /* SCRIPT CARDS */
+        .script {
+            background-color: var(--bgcolor);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            height: 100%;
+        }
+        
+        .script:hover {
+            transform: translateY(-6px);
+            background-color: var(--surface);
+            border-color: var(--accent);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px var(--accent-glow);
+        }
+        
+        .script img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .script:hover img {
+            border-bottom-color: var(--accent);
+        }
+        
+        .script-content {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+        
+        .script h3 {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .game-name { 
+            color: var(--text-secondary); 
+            font-size: 0.8rem; 
+        }
+        
+        .views { 
+            color: var(--text-muted); 
+            font-size: 0.75rem; 
+        }
+        
+        /* TAGS */
+        .tag {
+            padding: 4px 10px;
+            background-color: rgba(79, 70, 229, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-right: 6px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        
+        .tag:hover { 
+            background-color: rgba(79, 70, 229, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        /* BUTTONS */
+        .button-group {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px 14px;
+            background-color: rgba(79, 70, 229, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: rgba(79, 70, 229, 0.2);
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active { 
+            transform: scale(0.98) translateY(0);
+        }
+        
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal {
+            background: var(--bgcolor);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px var(--accent-glow);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 59, 48, 0.15);
+            color: #ff3b30;
+            border-color: #ff3b30;
+            transform: scale(1.1);
+        }
+        
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-body::-webkit-scrollbar-track {
+            background: var(--surface);
+            border-radius: 10px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+        
+        .modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        .modal-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background: var(--surface);
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        
+        .rating {
+            color: #fbbf24;
+        }
+        
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        
+        .modal-section h3 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .comment {
+            background: var(--surface);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        .comment-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+        
+        .modal-copy-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .modal-copy-btn:hover {
+            background: #4338ca;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .modal-copy-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+        
+        /* FLOAT BUTTON */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            transition: all 0.3s;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+        
+        .floating-btn:hover { 
+            background-color: var(--surface2);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 5px 25px var(--accent-glow);
+        }
+        
+        /* LOADER */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--surface);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+            margin: 60px auto;
+        }
+        
+        .scriptscontainer {
+            padding-top: 110px;
+        }
+        
+        @media (max-width: 640px) {
+            .scriptscontainer {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .modal-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 900px) {
+            .scriptscontainer {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 901px) {
+            .scriptscontainer {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input class="searchbar" placeholder="Search scripts...">
+    </div>
+    
+    <div class="container mx-auto px-4 pb-12">
+        <div class="scriptscontainer grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 max-w-[1600px] mx-auto">
+            <!-- Scripts will be loaded here -->
+        </div>
+    </div>
+    
+    <div class="floating-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Script Details</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-copy-btn" id="modalCopyBtn">
+                    <i class="far fa-copy"></i> Copy Script
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const proxies = [
+            'https://cors-anywhere.herokuapp.com/',
+            'https://api.codetabs.com/v1/proxy/?quest=',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+        
+        let page = 1;
+        let loading = false;
+        let proxy = 0;
+        let currentScript = null;
+        
+        async function load() {
+            const container = document.querySelector('.scriptscontainer');
+            container.innerHTML = '<div class="col-span-full"><div class="loading-spinner"></div></div>';
+            
+            try {
+                const url = 'https://scriptblox.com/api/script/fetch';
+                const response = await fetch(proxies[proxy] + url);
+                const jsdata = await response.json();
+                
+                if (jsdata?.result?.scripts) {
+                    addscript(jsdata.result.scripts);
+                }
+            } catch (error) {
+                console.log('Swapping proxy');
+                proxy = (proxy + 1) % proxies.length;
+                await load();
+            }
+        }
+        
+        async function loadpage(page = 2) {
+            const container = document.querySelector('.scriptscontainer');
+            loading = true;
+            
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'col-span-full';
+            loadingIndicator.innerHTML = '<div class="loading-spinner"></div>';
+            container.appendChild(loadingIndicator);
+            
+            try {
+                const url = `https://scriptblox.com/api/script/fetch?page=${page}`;
+                const response = await fetch(proxies[proxy] + url);
+                const jsdata = await response.json();
+                
+                container.removeChild(loadingIndicator);
+                
+                if (jsdata?.result?.scripts?.length > 0) {
+                    addscript(jsdata.result.scripts, true);
+                } else {
+                    const endMessage = document.createElement('div');
+                    endMessage.className = 'col-span-full py-8 text-center text-gray-400';
+                    endMessage.textContent = "You've reached the end 🚀";
+                    container.appendChild(endMessage);
+                }
+            } catch (error) {
+                console.log('Swapping proxy');
+                proxy = (proxy + 1) % proxies.length;
+                await loadpage(page);
+            } finally {
+                loading = false;
+            }
+        }
+        
+        function addscript(scripts, append = false) {
+            const container = document.querySelector('.scriptscontainer');
+            
+            if (!append) {
+                container.innerHTML = '';
+            }
+            
+            scripts.forEach(script => {
+                const raw = script.image;
+                const imageUrl = raw 
+                    ? (raw.startsWith('http') ? raw : `https://scriptblox.com${raw}`)
+                    : 'https://placehold.co/600x400/191919/4F46E5?text=No+Image';
+                
+                const card = document.createElement('div');
+                card.className = 'script';
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${script.title || 'Script'}">
+                    <div class="script-content">
+                        <h3>${script.title || 'Unknown Script'}</h3>
+                        <div class="game-name">
+                            <i class="fas fa-gamepad text-xs opacity-60"></i>
+                            ${script.game.name || 'Unknown Game'}
+                        </div>
+                        <div class="views">
+                            <i class="fas fa-eye text-xs opacity-60"></i>
+                            ${script.views ? script.views.toLocaleString() + ' views' : 'Unknown views'}
+                        </div>
+                        ${script.tags?.length ? `<div class="mt-2">${script.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` : ''}
+                        <div class="button-group">
+                            <button class="btn copy-btn" data-script="${encodeURIComponent(script.script)}">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="btn view-more-btn" data-script-data='${JSON.stringify(script).replace(/'/g, "&apos;")}'>
+                                <i class="fas fa-info-circle"></i> View More
+                            </button>
+                        </div>
+                    </div>`;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Copy button handler
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.copy-btn')) {
+                const button = e.target.closest('.copy-btn');
+                const encodedScript = button.getAttribute('data-script');
+                const fullScript = decodeURIComponent(encodedScript);
+                const originalContent = button.innerHTML;
+                
+                try {
+                    await navigator.clipboard.writeText(fullScript);
+                    
+                    button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    button.style.borderColor = '#4F46E5';
+                    button.style.color = '#4F46E5';
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.style.borderColor = '';
+                        button.style.color = '';
+                    }, 2000);
+                } catch (error) {
+                    console.error('Copy error:', error);
+                    button.innerHTML = '<i class="fas fa-times"></i> Failed';
+                    button.style.color = '#f87171';
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.style.color = '';
+                    }, 2000);
+                }
+            }
+        });
+        
+        // View More button handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.view-more-btn')) {
+                const button = e.target.closest('.view-more-btn');
+                const scriptData = JSON.parse(button.getAttribute('data-script-data'));
+                openModal(scriptData);
+            }
+        });
+        
+        async function openModal(script) {
+            currentScript = script;
+            const modal = document.getElementById('modalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = script.title || 'Unknown Script';
+            
+            const imageUrl = script.image 
+                ? (script.image.startsWith('http') ? script.image : `https://scriptblox.com${script.image}`)
+                : 'https://placehold.co/600x400/191919/4F46E5?text=No+Image';
+            
+            // Show loading state
+            modalBody.innerHTML = `
+                <img src="${imageUrl}" alt="${script.title}" class="modal-image">
+                <div class="col-span-full"><div class="loading-spinner"></div></div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Fetch real script details
+            try {
+                const scriptUrl = `https://scriptblox.com/api/script/${script.slug || script._id}`;
+                const response = await fetch(proxies[proxy] + scriptUrl);
+                const data = await response.json();
+                
+                const scriptData = data.script || script;
+                
+                // Extract real stats
+                const rating = scriptData.rating || scriptData.averageRating || 0;
+                const likes = scriptData.likeCount || scriptData.likes || 0;
+                const reviews = scriptData.reviewCount || 0;
+                const views = scriptData.views || script.views || 0;
+                
+                // Get real comments/reviews
+                let commentsHTML = '';
+                if (scriptData.comments && scriptData.comments.length > 0) {
+                    commentsHTML = scriptData.comments.slice(0, 5).map(comment => `
+                        <div class="comment">
+                            <div class="comment-author">${comment.username || comment.author || 'Anonymous'}</div>
+                            <div class="comment-text">${comment.text || comment.content || comment.comment || ''}</div>
+                        </div>
+                    `).join('');
+                } else if (scriptData.reviews && scriptData.reviews.length > 0) {
+                    commentsHTML = scriptData.reviews.slice(0, 5).map(review => `
+                        <div class="comment">
+                            <div class="comment-author">${review.username || review.author || 'Anonymous'}</div>
+                            <div class="comment-text">${review.text || review.content || review.review || ''}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    commentsHTML = '<div class="comment"><div class="comment-text" style="color: var(--text-muted); text-align: center;">No comments yet. Be the first to comment!</div></div>';
+                }
+                
+                // Render full modal content with real data
+                modalBody.innerHTML = `
+                    <img src="${imageUrl}" alt="${script.title}" class="modal-image">
+                    
+                    <div class="modal-info">
+                        <div class="info-item">
+                            <div class="info-label">Game</div>
+                            <div class="info-value">${script.game?.name || 'Unknown'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Views</div>
+                            <div class="info-value">
+                                <i class="fas fa-eye" style="opacity: 0.6; margin-right: 4px;"></i>
+                                ${views ? views.toLocaleString() : 'N/A'}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Rating</div>
+                            <div class="info-value rating">
+                                <i class="fas fa-star"></i> ${rating ? rating.toFixed(1) : 'N/A'} ${reviews > 0 ? `(${reviews} reviews)` : ''}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Likes</div>
+                            <div class="info-value">
+                                <i class="fas fa-heart" style="color: #f87171; margin-right: 4px;"></i>
+                                ${likes ? likes.toLocaleString() : '0'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${script.tags?.length ? `
+                    <div class="modal-section">
+                        <h3>Tags</h3>
+                        <div>
+                            ${script.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>` : ''}
+                    
+                    <div class="modal-section">
+                        <h3>Comments</h3>
+                        <div class="comments-list">
+                            ${commentsHTML}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading script details:', error);
+                
+                // Fallback to basic data from script object
+                const rating = script.rating || 0;
+                const likes = script.likeCount || script.likes || 0;
+                const reviews = script.reviewCount || 0;
+                const views = script.views || 0;
+                
+                modalBody.innerHTML = `
+                    <img src="${imageUrl}" alt="${script.title}" class="modal-image">
+                    
+                    <div class="modal-info">
+                        <div class="info-item">
+                            <div class="info-label">Game</div>
+                            <div class="info-value">${script.game?.name || 'Unknown'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Views</div>
+                            <div class="info-value">
+                                <i class="fas fa-eye" style="opacity: 0.6; margin-right: 4px;"></i>
+                                ${views ? views.toLocaleString() : 'N/A'}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Rating</div>
+                            <div class="info-value rating">
+                                <i class="fas fa-star"></i> ${rating ? rating.toFixed(1) : 'N/A'} ${reviews > 0 ? `(${reviews} reviews)` : ''}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Likes</div>
+                            <div class="info-value">
+                                <i class="fas fa-heart" style="color: #f87171; margin-right: 4px;"></i>
+                                ${likes ? likes.toLocaleString() : '0'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${script.tags?.length ? `
+                    <div class="modal-section">
+                        <h3>Tags</h3>
+                        <div>
+                            ${script.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>` : ''}
+                    
+                    <div class="modal-section">
+                        <h3>Comments</h3>
+                        <div class="comments-list">
+                            <div class="comment">
+                                <div class="comment-text" style="color: var(--text-muted); text-align: center;">
+                                    Unable to load comments. Try again later.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('modalOverlay');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            currentScript = null;
+        }
+        
+        // Modal copy button
+        document.getElementById('modalCopyBtn').addEventListener('click', async () => {
+            if (!currentScript?.script) return;
+            
+            const button = document.getElementById('modalCopyBtn');
+            const originalContent = button.innerHTML;
+            
+            try {
+                await navigator.clipboard.writeText(currentScript.script);
+                
+                button.innerHTML = '<i class="fas fa-check"></i> Copied to Clipboard!';
+                button.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.style.background = '';
+                }, 2000);
+            } catch (error) {
+                console.error('Copy error:', error);
+                button.innerHTML = '<i class="fas fa-times"></i> Failed to Copy';
+                button.style.background = '#f87171';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.style.background = '';
+                }, 2000);
+            }
+        });
+        
+        // Close modal on overlay click
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modalOverlay') {
+                closeModal();
+            }
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // Search functionality
+        const searchbar = document.querySelector('.searchbar');
+        let searchTimeout;
+        
+        searchbar.addEventListener('input', async (e) => {
+            clearTimeout(searchTimeout);
+            const content = e.target.value.trim();
+            const container = document.querySelector('.scriptscontainer');
+            
+            if (!content) {
+                await load();
+                return;
+            }
+            
+            container.innerHTML = '<div class="col-span-full"><div class="loading-spinner"></div></div>';
+            
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const searchUrl = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(content)}`;
+                    const answer = await fetch(proxies[proxy] + searchUrl);
+                    
+                    if (!answer.ok) {
+                        throw new Error('Search fetch error');
+                    }
+                    
+                    const data = await answer.json();
+                    
+                    if (data?.result?.scripts?.length > 0) {
+                        addscript(data.result.scripts);
+                    } else {
+                        container.innerHTML = `
+                            <div class="empty-state col-span-full">
+                                <i class="fas fa-search mb-4 text-4xl opacity-30"></i>
+                                <p>No scripts found for "${content}"</p>
+                                <p class="text-sm mt-2 opacity-50">Try different keywords</p>
+                            </div>`;
+                    }
+                } catch (error) {
+                    console.error("Search error:", error);
+                    proxy = (proxy + 1) % proxies.length;
+                    
+                    setTimeout(() => {
+                        searchbar.dispatchEvent(new Event('input'));
+                    }, 500);
+                }
+            }, 500);
+        });
+        
+        // Floating button visibility
+        window.addEventListener('scroll', function() {
+            const floatingBtn = document.querySelector('.floating-btn');
+            if (window.scrollY > 300) {
+                floatingBtn.style.opacity = '1';
+                floatingBtn.style.visibility = 'visible';
+                floatingBtn.style.transform = 'translateY(0)';
+            } else {
+                floatingBtn.style.opacity = '0';
+                floatingBtn.style.visibility = 'hidden';
+                floatingBtn.style.transform = 'translateY(20px)';
+            }
+        });
+        
+        // Initial load
+        load();
+        
+        // Infinite scroll
+        window.addEventListener('scroll', async () => {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const documentHeight = document.body.offsetHeight;
+            const threshold = 200;
+            
+            if (scrollPosition >= documentHeight - threshold && !loading) {
+                page += 1;
+                await loadpage(page);
+            }
+        });
+    </script>
+</body>
+</html>
