@@ -230,14 +230,12 @@
         }
         
         .modal {
-            background: var(--bgcolor);
+            background: transparent;
             border-radius: 16px;
             width: 90%;
-            max-width: 700px;
-            max-height: 85vh;
+            max-width: 680px;
+            max-height: 90vh;
             overflow: hidden;
-            border: 1px solid var(--accent);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px var(--accent-glow);
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
@@ -245,23 +243,27 @@
         
         .modal-header {
             padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(79, 70, 229, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--surface);
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px 16px 0 0;
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-bottom: none;
         }
         
         .modal-header h2 {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-main);
         }
         
         .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--text-muted);
@@ -280,18 +282,21 @@
         }
         
         .modal-body {
-            padding: 24px;
+            padding: 20px 24px;
             overflow-y: auto;
             flex: 1;
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(79, 70, 229, 0.3);
+            border-right: 1px solid rgba(79, 70, 229, 0.3);
         }
         
         .modal-body::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         
         .modal-body::-webkit-scrollbar-track {
-            background: var(--surface);
-            border-radius: 10px;
+            background: transparent;
         }
         
         .modal-body::-webkit-scrollbar-thumb {
@@ -301,35 +306,37 @@
         
         .modal-image {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
+            margin-bottom: 18px;
+            border: 1px solid rgba(79, 70, 229, 0.2);
         }
         
         .modal-info {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 18px;
         }
         
         .info-item {
-            background: var(--surface);
-            padding: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .info-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .info-value {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-main);
             font-weight: 600;
         }
@@ -339,58 +346,62 @@
         }
         
         .modal-section {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .modal-section h3 {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
         
         .comments-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         
         .comment {
-            background: var(--surface);
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .comment-author {
             font-weight: 600;
             color: var(--accent);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 4px;
         }
         
         .comment-text {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             line-height: 1.4;
         }
         
         .modal-footer {
             padding: 16px 24px;
-            border-top: 1px solid var(--border);
-            background: var(--surface);
+            border-top: 1px solid rgba(79, 70, 229, 0.2);
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 16px 16px;
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-top: none;
         }
         
         .modal-copy-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--accent);
             color: white;
             border: none;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
